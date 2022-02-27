@@ -661,6 +661,17 @@ PAPERLESS_CONSUMER_IGNORE_PATTERNS=<json>
 
     Defautls to ``[".DS_STORE/*", "._*", ".stfolder/*"]``.
 
+PAPERLESS_EXTRACT_ASN_REGEX=<regex>
+    After the document has been consumed paperless can be instructed to extract the
+    ASN from the document by using the regex specified in this parameter.
+    This can be useful if the ASN is alreay available (e.g. by applying a preprinted
+    label to the documnet which contains an ASN tha can be identifed by the regex) 
+    on the document prior to scanning it.
+
+    If for example such a label contains an ASN in the form ``<ASN:000000123>`` the regex
+    ``</ASN:([1-9]{9})>`` can be used to extract a 9-digit ASN and assign that automatically
+    to the consumed document.
+
 Binaries
 ########
 
