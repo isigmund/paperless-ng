@@ -232,23 +232,27 @@ def set_tags(
         document.tags.add(*relevant_tags)
 
 
-def set_asn(sender,
-             document=None,
-             logging_group=None,
-             classifier=None,
-             replace=False,
-             suggest=False,
-             base_url=None,
-             color=False,
-             **kwargs):
+def set_asn(
+    sender,
+    document=None,
+    logging_group=None,
+    classifier=None,
+    replace=False,
+    suggest=False,
+    base_url=None,
+    color=False,
+    **kwargs,
+):
 
     if document.archive_serial_number and not replace:
         return
-    
+
     # Only execute if parameter PAPERLESS_EXTRACT_ASN_REGEX is not empty
     if settings.EXTRACT_ASN_REGEX != None:
 
-        logger.debug(f"Extacting ASN from Document using regex: {settings.EXTRACT_ASN_REGEX} ")
+        logger.debug(
+            f"Extacting ASN from Document using regex: {settings.EXTRACT_ASN_REGEX} "
+        )
 
         # search for ASN using the regex defined in parameter PAPERLESS_EXTRACT_ASN_REGEX
         match = re.search(settings.EXTRACT_ASN_REGEX, document.content)
@@ -256,18 +260,21 @@ def set_asn(sender,
         if match != None:
             extracted_asn = int(match.group(1))
 
-            if Document.objects.filter(archive_serial_number=extracted_asn).count() == 0:
+            if (
+                Document.objects.filter(archive_serial_number=extracted_asn).count()
+                == 0
+            ):
                 # ASN does not yet exist --> update the document with the extraxted ASN
-                logger.debug(f"ASN {extracted_asn} found on document")  
+                logger.debug(f"ASN {extracted_asn} found on document")
                 document.archive_serial_number = extracted_asn
                 document.save(update_fields=("archive_serial_number",))
-            else:        
+            else:
                 # ASN does already exist -> dont assign an ASN
                 logger.warning(
                     f"ASN {extracted_asn} already exists - not assigned to new document"
                 )
         else:
-            logger.warning(f"ASN extraction failed !")  
+            logger.warning(f"ASN extraction failed !")
 
 
 @receiver(models.signals.post_delete, sender=Document)
