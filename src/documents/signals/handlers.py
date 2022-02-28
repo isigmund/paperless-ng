@@ -270,8 +270,6 @@ def set_asn(sender,
             logger.warning(f"ASN extraction failed !")  
 
 
-
-
 @receiver(models.signals.post_delete, sender=Document)
 def cleanup_document_deletion(sender, instance, using, **kwargs):
     with FileLock(settings.MEDIA_LOCK):
