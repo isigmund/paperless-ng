@@ -1,8 +1,6 @@
-from cgi import test
 import logging
 import os
 import re
-from pydoc import doc
 
 from django.utils import termcolors
 from django.conf import settings
@@ -23,7 +21,6 @@ from ..file_handling import (
     generate_unique_filename,
 )
 from ..models import Document, Tag, MatchingModel
-from paperless import settings
 
 
 logger = logging.getLogger("paperless.handlers")

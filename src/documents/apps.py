@@ -19,7 +19,6 @@ class DocumentsConfig(AppConfig):
             set_tags,
             add_to_index,
             set_asn,
-            add_to_index,
         )
 
         document_consumption_finished.connect(add_inbox_tags)
