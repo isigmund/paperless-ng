@@ -49,7 +49,9 @@ def set_correspondent(
     if document.correspondent and not replace:
         return
 
-    potential_correspondents = matching.match_correspondents(document, classifier)
+    potential_correspondents = matching.match_correspondents(
+        document, classifier
+    )
 
     potential_count = len(potential_correspondents)
     if potential_correspondents:
@@ -115,7 +117,9 @@ def set_document_type(
     if document.document_type and not replace:
         return
 
-    potential_document_type = matching.match_document_types(document, classifier)
+    potential_document_type = matching.match_document_types(
+        document, classifier
+    )
 
     potential_count = len(potential_document_type)
     if potential_document_type:
@@ -195,7 +199,9 @@ def set_tags(
     if suggest:
         extra_tags = current_tags - set(matched_tags)
         extra_tags = [
-            t for t in extra_tags if t.matching_algorithm == MatchingModel.MATCH_AUTO
+            t
+            for t in extra_tags
+            if t.matching_algorithm == MatchingModel.MATCH_AUTO
         ]
         if not relevant_tags and not extra_tags:
             return
@@ -216,7 +222,9 @@ def set_tags(
                 + f" [{document.pk}]"
             )
         if relevant_tags:
-            print("Suggest tags: " + ", ".join([t.name for t in relevant_tags]))
+            print(
+                "Suggest tags: " + ", ".join([t.name for t in relevant_tags])
+            )
         if extra_tags:
             print("Extra tags: " + ", ".join([t.name for t in extra_tags]))
     else:
@@ -225,7 +233,9 @@ def set_tags(
 
         message = 'Tagging "{}" with "{}"'
         logger.info(
-            message.format(document, ", ".join([t.name for t in relevant_tags])),
+            message.format(
+                document, ", ".join([t.name for t in relevant_tags])
+            ),
             extra={"group": logging_group},
         )
 
@@ -248,30 +258,36 @@ def set_asn(
         return
 
     # Only execute if parameter PAPERLESS_EXTRACT_ASN_REGEX is not empty
-    if settings.EXTRACT_ASN_REGEX != None:
+    if settings.EXTRACT_ASN_REGEX is not None:
 
         logger.debug(
-            f"Extacting ASN from Document using regex: {settings.EXTRACT_ASN_REGEX} "
+            f"Extacting ASN from Document using regex: "
+            "{settings.EXTRACT_ASN_REGEX} "
         )
 
-        # search for ASN using the regex defined in parameter PAPERLESS_EXTRACT_ASN_REGEX
+        # search for ASN using the regex defined in
+        # parameter PAPERLESS_EXTRACT_ASN_REGEX
         match = re.search(settings.EXTRACT_ASN_REGEX, document.content)
 
-        if match != None:
+        if match is not None:
             extracted_asn = int(match.group(1))
 
             if (
-                Document.objects.filter(archive_serial_number=extracted_asn).count()
+                Document.objects.filter(
+                    archive_serial_number=extracted_asn
+                ).count()
                 == 0
             ):
-                # ASN does not yet exist --> update the document with the extraxted ASN
+                # ASN does not yet exist -
+                # -> update the document with extraxted ASN
                 logger.debug(f"ASN {extracted_asn} found on document")
                 document.archive_serial_number = extracted_asn
                 document.save(update_fields=("archive_serial_number",))
             else:
                 # ASN does already exist -> dont assign an ASN
                 logger.warning(
-                    f"ASN {extracted_asn} already exists - not assigned to new document"
+                    f"ASN {extracted_asn} already exists"
+                    " - not assigned to new document"
                 )
         else:
             logger.warning(f"ASN extraction failed !")
@@ -290,7 +306,9 @@ def cleanup_document_deletion(sender, instance, using, **kwargs):
             while True:
                 new_file_path = os.path.join(
                     settings.TRASH_DIR,
-                    old_filebase + (f"_{counter:02}" if counter else "") + old_fileext,
+                    old_filebase
+                    + (f"_{counter:02}" if counter else "")
+                    + old_fileext,
                 )
 
                 if os.path.exists(new_file_path):
@@ -298,7 +316,9 @@ def cleanup_document_deletion(sender, instance, using, **kwargs):
                 else:
                     break
 
-            logger.debug(f"Moving {instance.source_path} to trash at {new_file_path}")
+            logger.debug(
+                f"Moving {instance.source_path} to trash at {new_file_path}"
+            )
             try:
                 os.rename(instance.source_path, new_file_path)
             except OSError as e:
@@ -329,7 +349,8 @@ def cleanup_document_deletion(sender, instance, using, **kwargs):
 
         if instance.has_archive_version:
             delete_empty_directories(
-                os.path.dirname(instance.archive_path), root=settings.ARCHIVE_DIR
+                os.path.dirname(instance.archive_path),
+                root=settings.ARCHIVE_DIR,
             )
 
 
@@ -400,7 +421,9 @@ def update_filename_and_move_files(sender, instance, **kwargs):
                 os.rename(old_source_path, instance.source_path)
 
             if move_archive:
-                validate_move(instance, old_archive_path, instance.archive_path)
+                validate_move(
+                    instance, old_archive_path, instance.archive_path
+                )
                 create_source_path_directory(instance.archive_path)
                 os.rename(old_archive_path, instance.archive_path)
 

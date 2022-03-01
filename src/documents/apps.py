@@ -19,7 +19,7 @@ class DocumentsConfig(AppConfig):
             set_tags,
             add_to_index,
             set_asn,
-            add_to_index
+            add_to_index,
         )
 
         document_consumption_finished.connect(add_inbox_tags)
@@ -29,5 +29,5 @@ class DocumentsConfig(AppConfig):
         document_consumption_finished.connect(set_log_entry)
         document_consumption_finished.connect(set_asn)
         document_consumption_finished.connect(add_to_index)
- 
+
         AppConfig.ready(self)

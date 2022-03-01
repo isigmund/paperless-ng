@@ -11,12 +11,12 @@ logger = logging.getLogger("paperless.management.generate_asn_labels")
 class Command(BaseCommand):
 
     help = """
-        Allows to generate a PDF file in th egiven target folder containing lables for 
-        ASNs (Archive Serial Numbers) that can be used to attach to documents before 
-        they are scanned and consumed.
-        The ASN on these lables are then extracted and assigned to the document
-        during consumption if the corresponding parameter PAPERLESS_EXTRACT_ASN_REGEX 
-        is used define a corresponding regex 
+        Allows to generate a PDF file in th egiven target folder containing
+        lables for ASNs (Archive Serial Numbers) that can be used to attach
+        to documents before they are scanned and consumed.
+        The ASN on these lables are then extracted and assigned to the
+        document during consumption if the corresponding parameter
+        PAPERLESS_EXTRACT_ASN_REGEX is used define a corresponding regex
     """.replace(
         "    ", ""
     )
@@ -145,4 +145,6 @@ class Command(BaseCommand):
 
         pdf.output(os.path.abspath(os.path.join(target, filename)))
 
-        logger.info(f"Produced ASN labels from {options['asn_start']} to {asn_end} .")
+        logger.info(
+            f"Produced ASN labels from " "{options['asn_start']} to {asn_end}."
+        )
