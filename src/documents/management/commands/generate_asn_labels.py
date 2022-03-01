@@ -145,6 +145,4 @@ class Command(BaseCommand):
 
         pdf.output(os.path.abspath(os.path.join(target, filename)))
 
-        logger.info(
-            f"Produced ASN labels from " "{options['asn_start']} to {asn_end}."
-        )
+        logger.info(f"Produced ASN labels from " "{options['asn_start']} to {asn_end}.")
