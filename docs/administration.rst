@@ -459,6 +459,47 @@ is specified, the archiver will only process that document.
     such as encrypted PDF documents. The archiver will skip over these documents
     each time it sees them.
 
+
+.. _utilities-generate_asn_labels:
+
+Generate ASN labels
+===========================
+
+With the setting ``PAPERLESS_EXRACT_ASN_REGEX=<regex>`` Paperless can be instructed
+to scan newly imported documents for an ASN using the given regex. One way to 
+include an ASN on a document before scanning it is to attach a label with a 
+sequential ASN to the document.
+
+The following management command allows to generate a PDF file containing sequential 
+ASN labels. This PDF file can be printed on label stock resulting in unique ASN labels
+that can then be used to stick on documents prior to scanning them.
+
+.. code::
+
+    generate_asn_labels target [-a] [-f] [-r] [-c] [-p] [-s] [--color] [--fontsize]       
+
+    optional arguments:
+    -a, --asn_start (defaut: 1)
+    -f, --format (default: <ASN:{:09}>)
+    -r, --rows (default: 14)
+    -c, --columns (default: 4)
+    -p, --pages (default: 1)
+    -s, --sheet_size (default: A4)
+    --color (default black: 0 0 0)
+    --fontsize (default: 12)
+
+``target`` is a folder to which the resulting PDF file gets written. Without specifying 
+additional parameters the command generates a PDF containing a single A4 page with
+56 ASN labels (in 14 rows with 4 lables per row) with an ASN in the form ``<ASN-000000001>`` 
+to ``<ASN-000000056>``. 
+The parameters listed above can be used to customize the labes to your needs. The command 
+``generate_asn_labels --help`` provides additional information on how the parameters can 
+be used.
+
+With the default format (parmeter ``-f <ASN:{:09}>``) the following regex ``</ASN:([1-9]{9})>``
+can be used in the parameter ``PAPERLESS_EXRACT_ASN_REGEX`` to extract the ASN
+
+
 .. _utilities-encyption:
 
 Managing encryption
