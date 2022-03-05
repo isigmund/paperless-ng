@@ -11,7 +11,7 @@
 
   .items {
     max-height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   button:disabled {
@@ -46,7 +46,6 @@
   }
 }
 
-
 small > svg {
   margin-top: -2px;
 }
@@ -57,4 +56,8 @@ small > svg {
   small {
     font-size: 65%;
   }
+}
+
+.show .btn-outline-primary {
+  color: #fff;
 }

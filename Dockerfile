@@ -3,7 +3,7 @@ FROM node:16 AS compile-frontend
 COPY . /src
 
 WORKDIR /src/src-ui
-RUN npm install
+RUN npm update npm -g && npm install
 RUN ./node_modules/.bin/ng build --configuration production
 
 
@@ -74,7 +74,7 @@ RUN apt-get update \
 		git \
 		zlib1g-dev \
 		libjpeg62-turbo-dev \
-	&& if [ "$(uname -m)" = "armv7l" ]; \
+	&& if [ "$(uname -m)" = "armv7l" ] || [ "$(uname -m)" = "aarch64" ]; \
 	  then echo "Building qpdf" \
 	  && mkdir -p /usr/src/qpdf \
 	  && cd /usr/src/qpdf \
@@ -88,8 +88,9 @@ RUN apt-get update \
 	else \
 	  echo "Skipping qpdf build because pikepdf binary wheels are available."; \
 	fi \
+    && python3 -m pip install --upgrade pip wheel \
 	&& python3 -m pip install --default-timeout=1000 --upgrade --no-cache-dir supervisor \
-  && python3 -m pip install --default-timeout=1000 --no-cache-dir -r ../requirements.txt \
+  	&& python3 -m pip install --default-timeout=1000 --no-cache-dir -r ../requirements.txt \
 	&& apt-get -y purge build-essential git zlib1g-dev libjpeg62-turbo-dev \
 	&& apt-get -y autoremove --purge \
 	&& rm -rf /var/lib/apt/lists/*
@@ -98,7 +99,7 @@ RUN apt-get update \
 COPY docker/ ./docker/
 
 RUN cd docker \
-  && cp imagemagick-policy.xml /etc/ImageMagick-6/policy.xml \
+  	&& cp imagemagick-policy.xml /etc/ImageMagick-6/policy.xml \
 	&& mkdir /var/log/supervisord /var/run/supervisord \
 	&& cp supervisord.conf /etc/supervisord.conf \
 	&& cp docker-entrypoint.sh /sbin/docker-entrypoint.sh \
@@ -126,4 +127,8 @@ ENTRYPOINT ["/sbin/docker-entrypoint.sh"]
 EXPOSE 8000
 CMD ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
 
-LABEL maintainer="Jonas Winkler <dev@jpwinkler.de>"
+LABEL org.opencontainers.image.authors="paperless-ngx team <hello@paperless-ngx.com>"
+LABEL org.opencontainers.image.documentation="https://paperless-ngx.readthedocs.io/en/latest/"
+LABEL org.opencontainers.image.source="https://github.com/paperless-ngx/paperless-ngx"
+LABEL org.opencontainers.image.url="https://github.com/paperless-ngx/paperless-ngx"
+LABEL org.opencontainers.image.licenses="GPL-3.0-only"

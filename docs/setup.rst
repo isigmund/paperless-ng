@@ -3,8 +3,8 @@
 Setup
 *****
 
-Overview of Paperless-ng
-########################
+Overview of Paperless-ngx
+#########################
 
 Compared to paperless, paperless-ngx works a little different under the hood and has
 more moving parts that work together. While this increases the complexity of
@@ -110,14 +110,14 @@ performs all the steps described in :ref:`setup-docker_hub` automatically.
 
     .. code:: shell-session
 
-        $ bash -c "$(curl -L https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/master/install-paperless-ng.sh)"
+        $ bash -c "$(curl -L https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/master/install-paperless-ngx.sh)"
 
 .. _setup-docker_hub:
 
 Install Paperless from Docker Hub
 =================================
 
-1.  Login with your user and create a folder in your home-directory `mkdir -v ~/paperless-ng` to have a place for your configuration files and consumption directory.
+1.  Login with your user and create a folder in your home-directory `mkdir -v ~/paperless-ngx` to have a place for your configuration files and consumption directory.
 
 2.  Go to the `/docker/compose directory on the project page <https://github.com/paperless-ngx/paperless-ngx/tree/master/docker/compose>`_
     and download one of the `docker-compose.*.yml` files, depending on which database backend you
@@ -251,7 +251,7 @@ Build the Docker image yourself
     .. code:: yaml
 
         webserver:
-            image: jonaswinkler/paperless-ng:latest
+            image: ghcr.io/paperless-ngx/paperless-ngx:latest
 
     and replace it with a line that instructs docker-compose to build the image from the current working directory instead:
 
@@ -468,8 +468,39 @@ writing. Windows is not and will never be supported.
     to compile this by yourself, because this software has been patented until around 2017 and
     binary packages are not available for most distributions.
 
-Migration to paperless-ngx
-#########################
+Migrating to Paperless-ngx
+##########################
+
+Migration is possible both from Paperless-ng or directly from the 'original' Paperless.
+
+Migrating from Paperless-ng
+===========================
+
+Paperless-ngx is meant to be a drop-in replacement for Paperless-ng and thus upgrading should be
+trivial for most users, especially when using docker. However, as with any major change, it is 
+recommended to take a full backup first. Once you are ready, simply change the docker image to
+point to the new source. E.g. if using Docker Compose, edit ``docker-compose.yml`` and change:
+
+.. code::
+
+  image: jonaswinkler/paperless-ng:latest
+
+to
+
+.. code::
+
+  image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    
+and then run ``docker-compose up -d`` which will pull the new image recreate the container.
+That's it!
+
+Users who installed with the bare-metal route should also update their Git clone to point to 
+``https://github.com/paperless-ngx/paperless-ngx``, e.g. using the command 
+``git remote set-url origin https://github.com/paperless-ngx/paperless-ngx`` and then pull the
+lastest version.
+
+Migrating from Paperless
+========================
 
 At its core, paperless-ngx is still paperless and fully compatible. However, some
 things have changed under the hood, so you need to adapt your setup depending on
@@ -511,7 +542,7 @@ Migration to paperless-ngx is then performed in a few simple steps:
 
     .. caution::
 
-        Paperless-ng includes a ``.env`` file. This will set the
+        Paperless-ngx includes a ``.env`` file. This will set the
         project name for docker compose to ``paperless``, which will also define the name
         of the volumes by paperless-ngx. However, if you experience that paperless-ngx
         is not using your old paperless volumes, verify the names of your volumes with
@@ -634,14 +665,14 @@ management commands as below.
 7.  Start paperless.
 
 
-Moving back to paperless
+Moving back to Paperless
 ========================
 
-Lets say you migrated to Paperless-ng and used it for a while, but decided that
+Lets say you migrated to Paperless-ngx and used it for a while, but decided that
 you don't like it and want to move back (If you do, send me a mail about what
 part you didn't like!), you can totally do that with a few simple steps.
 
-Paperless-ng modified the database schema slightly, however, these changes can
+Paperless-ngx modified the database schema slightly, however, these changes can
 be reverted while keeping your current data, so that your current data will
 be compatible with original Paperless.
 
@@ -659,7 +690,7 @@ Or without docker:
     $ cd /path/to/paperless/src
     $ python3 manage.py migrate documents 0023
 
-After that, you need to clear your cookies (Paperless-ng comes with updated
+After that, you need to clear your cookies (Paperless-ngx comes with updated
 dependencies that do cookie-processing differently) and probably your cache
 as well.
 
