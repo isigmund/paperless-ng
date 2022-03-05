@@ -672,6 +672,10 @@ PAPERLESS_EXTRACT_ASN_REGEX=<regex>
     ``</ASN:([1-9]{9})>`` can be used to extract a 9-digit ASN and assign that automatically
     to the consumed document.
 
+    The management command ``generate_asn_labels`` can be used to produce a PDF file 
+    containing corresponding labels for printing. 
+    Details can be found at :ref:`Generate ASN Lables<utilities-generate_asn_labels>`.
+
 Binaries
 ########
 
