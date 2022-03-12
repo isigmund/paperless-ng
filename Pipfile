@@ -57,11 +57,4 @@ sphinx = "~=3.4.2"
 sphinx_rtd_theme = "*"
 tox = "*"
 black = "*"
-
-[packages.fuzzywuzzy]
-extras = [ "speedup",]
-version = "*"
-
-[packages.uvicorn]
-extras = [ "standard",]
-version = "*"
+pre-commit = "*"
