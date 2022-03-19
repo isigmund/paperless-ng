@@ -11,7 +11,7 @@ logger = logging.getLogger("paperless.management.generate_asn_labels")
 class Command(BaseCommand):
 
     help = """
-        Allows to generate a PDF file in th egiven target folder containing
+        Allows to generate a PDF file in the given target folder containing
         lables for ASNs (Archive Serial Numbers) that can be used to attach
         to documents before they are scanned and consumed.
         The ASN on these lables are then extracted and assigned to the
@@ -125,7 +125,7 @@ class Command(BaseCommand):
 
         asn = options["asn_start"]
         for page in range(0, options["pages"]):
-            logger.info(f"page:{page}")
+            logger.debug(f"page:{page}")
             pdf.add_page()
             for row in range(0, options["rows"]):
                 for column in range(0, options["columns"]):
@@ -145,4 +145,4 @@ class Command(BaseCommand):
 
         pdf.output(os.path.abspath(os.path.join(target, filename)))
 
-        logger.info(f"Produced ASN labels from " "{options['asn_start']} to {asn_end}.")
+        logger.info(f"Produced ASN labels from {options['asn_start']} to {asn_end}.")
