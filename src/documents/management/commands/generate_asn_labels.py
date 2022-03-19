@@ -1,8 +1,9 @@
 import logging
 import os
 
+from django.core.management.base import BaseCommand
+from django.core.management.base import CommandError
 from fpdf import FPDF
-from django.core.management.base import BaseCommand, CommandError
 
 
 logger = logging.getLogger("paperless.management.generate_asn_labels")
@@ -18,7 +19,8 @@ class Command(BaseCommand):
         document during consumption if the corresponding parameter
         PAPERLESS_EXTRACT_ASN_REGEX is used define a corresponding regex
     """.replace(
-        "    ", ""
+        "    ",
+        "",
     )
 
     def add_arguments(self, parser):
@@ -114,14 +116,16 @@ class Command(BaseCommand):
         )
 
         pdf = FPDF(orientation="Portrait", format=options["sheet_size"])
-        pdf.set_font("helvetica", size=options["fontsize"])
+        pdf.set_font("helvetica", style="B", size=options["fontsize"])
         pdf.set_text_color(
-            options["color"][0], options["color"][1], options["color"][2]
+            options["color"][0],
+            options["color"][1],
+            options["color"][2],
         )
         pdf.set_margin(0)
 
-        cell_width = pdf.epw / options["columns"]
-        cell_height = pdf.eph / options["rows"]
+        cell_width = int(pdf.epw) / options["columns"]
+        cell_height = int(pdf.eph) / options["rows"]
 
         asn = options["asn_start"]
         for page in range(0, options["pages"]):
@@ -145,4 +149,10 @@ class Command(BaseCommand):
 
         pdf.output(os.path.abspath(os.path.join(target, filename)))
 
-        logger.info(f"Produced ASN labels from {options['asn_start']} to {asn_end}.")
+        logger.info(
+            (
+                "Produced ASN labels from "
+                f"{options['format'].format(options['asn_start'])} "
+                f"to {options['format'].format(asn_end)}."
+            ),
+        )
