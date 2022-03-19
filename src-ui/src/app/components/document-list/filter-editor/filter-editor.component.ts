@@ -12,7 +12,7 @@ import { PaperlessTag } from 'src/app/data/paperless-tag'
 import { PaperlessCorrespondent } from 'src/app/data/paperless-correspondent'
 import { PaperlessDocumentType } from 'src/app/data/paperless-document-type'
 import { Subject, Subscription } from 'rxjs'
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
+import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators'
 import { DocumentTypeService } from 'src/app/services/rest/document-type.service'
 import { TagService } from 'src/app/services/rest/tag.service'
 import { CorrespondentService } from 'src/app/services/rest/correspondent.service'
@@ -422,12 +422,12 @@ export class FilterEditorComponent implements OnInit, OnDestroy {
     this.textFilterDebounce = new Subject<string>()
 
     this.subscription = this.textFilterDebounce
-      .pipe(debounceTime(400), distinctUntilChanged())
-      .subscribe((text) => {
-        this._textFilter = text
-        this.documentService.searchQuery = text
-        this.updateRules()
-      })
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter((query) => !query.length || query.length > 2)
+      )
+      .subscribe((text) => this.updateTextFilter(text))
 
     if (this._textFilter) this.documentService.searchQuery = this._textFilter
   }
@@ -470,6 +470,21 @@ export class FilterEditorComponent implements OnInit, OnDestroy {
 
   onDocumentTypeDropdownOpen() {
     this.documentTypeSelectionModel.apply()
+  }
+
+  updateTextFilter(text) {
+    this._textFilter = text
+    this.documentService.searchQuery = text
+    this.updateRules()
+  }
+
+  textFilterEnter() {
+    const filterString = (
+      this.textFilterInput.nativeElement as HTMLInputElement
+    ).value
+    if (filterString.length) {
+      this.updateTextFilter(filterString)
+    }
   }
 
   changeTextFilterTarget(target) {

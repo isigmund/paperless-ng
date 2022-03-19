@@ -312,7 +312,7 @@ class TestConsumer(DirectoriesMixin, TestCase):
         shutil.copy(src, dst)
         return dst
 
-    @override_settings(PAPERLESS_FILENAME_FORMAT=None)
+    @override_settings(PAPERLESS_FILENAME_FORMAT=None, TIME_ZONE="America/Chicago")
     def testNormalOperation(self):
 
         filename = self.get_test_file()
@@ -340,6 +340,8 @@ class TestConsumer(DirectoriesMixin, TestCase):
         self.assertFalse(os.path.isfile(filename))
 
         self._assert_first_last_send_progress()
+
+        self.assertEqual(document.created.tzinfo.zone, "America/Chicago")
 
     @override_settings(PAPERLESS_FILENAME_FORMAT=None)
     def testDeleteMacFiles(self):

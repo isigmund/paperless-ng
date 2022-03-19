@@ -34,7 +34,7 @@ whitenoise = "~=6.0.0"
 watchdog = "~=2.1.0"
 whoosh = "~=2.7.4"
 inotifyrecursive = "~=0.3.4"
-ocrmypdf = "~=13.4.0"
+ocrmypdf = "~=13.4.1"
 tqdm = "*"
 tika = "*"
 channels = "~=3.0"
@@ -42,6 +42,9 @@ channels-redis = "*"
 concurrent-log-handler = "*"
 "pdfminer.six" = "*"
 fpdf2 = "*"
+"backports.zoneinfo" = {version = "*", markers = "python_version < '3.9'"}
+"importlib-resources" = {version = "*", markers = "python_version < '3.9'"}
+zipp = {version = "*", markers = "python_version < '3.9'"}
 
 [dev-packages]
 coveralls = "*"
@@ -53,7 +56,7 @@ pytest-django = "*"
 pytest-env = "*"
 pytest-sugar = "*"
 pytest-xdist = "*"
-sphinx = "~=3.4.2"
+sphinx = "~=4.4.0"
 sphinx_rtd_theme = "*"
 tox = "*"
 black = "*"
